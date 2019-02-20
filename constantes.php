@@ -11,5 +11,4 @@ echo SERVIDOR."<br>";
 print_r(BANCO_DE_DADOS);
 
 
-
  ?>
