@@ -16,6 +16,6 @@ spl_autoload_register(
         }
 );
 
-$carro = new DelRey();
-$carro->acelerar(155);
+//$carro = new DelRey();
+//$carro->acelerar(155);
  ?>
