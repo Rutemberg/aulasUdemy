@@ -1,6 +1,6 @@
 <?php
 
-//registra a função abaixo
+//registra a função abaixo 
 spl_autoload_register(
     function($class_name){
         require_once("$class_name.php");
