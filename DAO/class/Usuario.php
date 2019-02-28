@@ -55,14 +55,92 @@ class Usuario
         ));
 
         if (count($result) > 0) {
-            $row = $result[0];
+            $this->setData($result[0]);
+        }
+    }
 
-            $this->setIdusuario($row['idusuario']);
-            $this->setLogin($row['login']);
-            $this->setSenha($row['senha']);
-            $this->setDtcadastro(new DateTime($row['dtcadastro']));
+    public static function listAll()
+    {
+        $sql = new Sql();
+        return $sql->select("SELECT * FROM tb_usuario");
+    }
+
+    public static function search($login){
+        $sql = new Sql();
+        return $sql->select("SELECT * FROM tb_usuario WHERE login LIKE :LOGIN ORDER BY login", array(
+            ":LOGIN" => "%$login%"
+        ));
+    }
+
+    public function login($login, $senha)
+    {
+        $sql = new Sql();
+        $result = $sql->select("SELECT * FROM tb_usuario WHERE login = :LOGIN AND senha = :SENHA", array(
+            ":LOGIN" => $login,
+            ":SENHA" => $senha
+        ));
+
+        if (count($result) > 0) {
+            $this->setData($result[0]);
+        }
+        else {
+            throw new Exception("LOGIN INVALIDO", 1);
 
         }
+    }
+
+    public function setData($data)
+    {
+        $this->setIdusuario($data['idusuario']);
+        $this->setLogin($data['login']);
+        $this->setSenha($data['senha']);
+        $this->setDtcadastro(new DateTime($data['dtcadastro']));
+    }
+
+    public function insert()
+    {
+        $sql = new Sql();
+        //sql server EXECUTE em vez de CALL
+        $result = $sql->select("CALL sp_usuarios_insert(:LOGIN, :SENHA)", array(
+            ":LOGIN" => $this->getLogin(),
+            ":SENHA" => $this->getSenha()
+        ));
+
+        if (count($result) > 0) {
+            $this->setData($result[0]);
+        }
+    }
+
+    public function update($login, $senha)
+    {
+        $this->setLogin($login);
+        $this->setSenha($senha);
+
+        $sql = new Sql();
+        $sql->query("UPDATE tb_usuario SET login = :LOGIN, senha = :SENHA WHERE idusuario = :ID", array(
+            ":LOGIN"=>$this->getLogin(),
+            ":SENHA"=>$this->getSenha(),
+            ":ID"=>$this->getIdusuario()
+        ));
+    }
+
+    public function delete()
+    {
+        $sql = new Sql();
+        $sql->query("DELETE FROM tb_usuario WHERE idusuario = :ID", array(
+            ":ID"=>$this->getIdusuario()
+        ));
+
+        $this->setIdusuario(0);
+        $this->setLogin(NULL);
+        $this->setSenha(NULL);
+        $this->setDtcadastro(new DateTime());
+
+    }
+
+    public function __construct($login = "", $senha = ""){
+        $this->setLogin($login);
+        $this->setSenha($senha);
     }
 
     public function __toString()
