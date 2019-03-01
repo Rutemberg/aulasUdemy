@@ -3,14 +3,24 @@
 require_once("config.php");
 
 $sql = new Sql();
-$resultado = $sql->select("SELECT * FROM tb_usuario ORDER BY login");
+$usuarios = $sql->select("SELECT * FROM tb_usuario ORDER BY login");
 
 $headers = array();
 
-foreach ($resultado[0] as $key => $value) {
+foreach ($usuarios[0] as $key => $value) {
     array_push($headers, ucfirst($key));
 }
 
 $file = fopen("usuarios.csv", "w+");
-fwrite($file, implode(",", $headers));
+fwrite($file, implode(",", $headers)."\r\n");
+
+foreach ($usuarios as $row) {
+    $data = array();
+    foreach ($row as $key => $value) {
+        array_push($data, $value);
+    }
+    fwrite($file, implode(",", $data)."\r\n");
+}
+
+fclose($file);
  ?>
