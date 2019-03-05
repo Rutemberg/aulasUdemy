@@ -1,0 +1,15 @@
+{
+    "name": "rutembergbarbosa/composer",
+    "description": "Aulas udemy PHP7 composer",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Rutemberg",
+            "email": "rutembergbarbosa@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+      "monolog/monolog":"1.0.*"
+    }
+}
